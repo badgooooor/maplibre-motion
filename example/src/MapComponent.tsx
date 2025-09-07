@@ -1,13 +1,71 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import maplibregl from 'maplibre-gl';
+import { applyRoute } from '../../src/polyline';
 import 'maplibre-gl/dist/maplibre-gl.css';
 
-const center = [100.5516076004593, 13.728959280625702] // [longitude, latitude]
-const zoom = 15
+interface Coordinate {
+  lat: number;
+  lng: number;
+}
 
-const MapComponent = () => {
-  const mapContainer = useRef(null);
-  const map = useRef(null);
+interface RouteGeoJSON {
+  type: 'Feature';
+  properties: Record<string, never>;
+  geometry: {
+    type: 'LineString';
+    coordinates: [number, number][];
+  };
+}
+
+const center: [number, number] = [100.5516076004593, 13.728959280625702]; // [longitude, latitude]
+const zoom = 15;
+
+const routeCoordinates: Coordinate[] = [
+  {
+      "lat": 13.727646066443867,
+      "lng": 100.55793761373866
+  },
+  {
+      "lat": 13.725665808934693,
+      "lng": 100.55798052908187
+  },
+  {
+      "lat": 13.725895102764795,
+      "lng": 100.55963276983562
+  },
+  {
+      "lat": 13.72760437698436,
+      "lng": 100.55986880422842
+  },
+  {
+      "lat": 13.732502837753472,
+      "lng": 100.55939673544276
+  },
+  {
+      "lat": 13.732669592063687,
+      "lng": 100.55886029363933
+  },
+  {
+      "lat": 13.732690436343589,
+      "lng": 100.55789469839334
+  }
+];
+
+// Convert route coordinates to GeoJSON format (longitude, latitude)
+const routeGeoJSON: RouteGeoJSON = {
+  type: 'Feature',
+  properties: {},
+  geometry: {
+    type: 'LineString',
+    coordinates: routeCoordinates.map(point => [point.lng, point.lat])
+  }
+};
+
+const MapComponent = (): JSX.Element => {
+  const mapContainer = useRef<HTMLDivElement>(null);
+  const map = useRef<maplibregl.Map | null>(null);
+
+  const [route, setRoute] = useState<Coordinate[]>([]);
 
   useEffect(() => {
     if (map.current) return;
@@ -49,11 +107,18 @@ const MapComponent = () => {
         map.current.on('load', () => {
           if (map.current) {
             map.current.resize();
+            
+            applyRoute(map.current, 'test-route', routeCoordinates);
           }
         });
 
-        map.current.on('click', (e) => {
+        map.current.on('click', (e: maplibregl.MapMouseEvent) => {
           console.log('MapComponent: Click on coordinates:', e.lngLat.lat, e.lngLat.lng);
+          setRoute(prevRoute => {
+            const newRoute: Coordinate[] = [...prevRoute, { lat: e.lngLat.lat, lng: e.lngLat.lng }];
+            console.log('MapComponent: New route:', newRoute);
+            return newRoute;
+          });
         });
 
         map.current.on('error', (e) => {
