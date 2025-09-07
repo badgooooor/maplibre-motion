@@ -1,20 +1,11 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef } from 'react';
 import maplibregl from 'maplibre-gl';
-import { applyRoute } from '../../src/polyline';
+import { addMotionRoute } from '../../src/motionRoute';
 import 'maplibre-gl/dist/maplibre-gl.css';
 
 interface Coordinate {
   lat: number;
   lng: number;
-}
-
-interface RouteGeoJSON {
-  type: 'Feature';
-  properties: Record<string, never>;
-  geometry: {
-    type: 'LineString';
-    coordinates: [number, number][];
-  };
 }
 
 const center: [number, number] = [100.5516076004593, 13.728959280625702]; // [longitude, latitude]
@@ -48,24 +39,52 @@ const routeCoordinates: Coordinate[] = [
   {
       "lat": 13.732690436343589,
       "lng": 100.55789469839334
+  },
+  {
+    "lat": 13.732971833948724,
+    "lng": 100.55736898542551
+  },
+  {
+    "lat": 13.733430407099249,
+    "lng": 100.55704712034327
+  },
+  {
+    "lat": 13.73343040709858,
+    "lng": 100.55499254823269
+  },
+  {
+    "lat": 13.733363885824332,
+    "lng": 100.55345568247816
+  },
+  {
+    "lat": 13.733619010725704,
+    "lng": 100.55319031951848
+  },
+  {
+    "lat": 13.733395986815765,
+    "lng": 100.55280870749698
+  },
+  {
+    "lat": 13.733251322545158,
+    "lng": 100.55227817371048
+  },
+  {
+    "lat": 13.7328424320485,
+    "lng": 100.55220433903793
+  },
+  {
+    "lat": 13.72753747804424,
+    "lng": 100.55272440390081
+  },
+  {
+    "lat": 13.727712342374616,
+    "lng": 100.55723981750663
   }
 ];
-
-// Convert route coordinates to GeoJSON format (longitude, latitude)
-const routeGeoJSON: RouteGeoJSON = {
-  type: 'Feature',
-  properties: {},
-  geometry: {
-    type: 'LineString',
-    coordinates: routeCoordinates.map(point => [point.lng, point.lat])
-  }
-};
 
 const MapComponent = (): JSX.Element => {
   const mapContainer = useRef<HTMLDivElement>(null);
   const map = useRef<maplibregl.Map | null>(null);
-
-  const [route, setRoute] = useState<Coordinate[]>([]);
 
   useEffect(() => {
     if (map.current) return;
@@ -108,17 +127,13 @@ const MapComponent = (): JSX.Element => {
           if (map.current) {
             map.current.resize();
             
-            applyRoute(map.current, 'test-route', routeCoordinates);
+            addMotionRoute(map.current, 'test-route', routeCoordinates);
           }
         });
 
+        // 
         map.current.on('click', (e: maplibregl.MapMouseEvent) => {
           console.log('MapComponent: Click on coordinates:', e.lngLat.lat, e.lngLat.lng);
-          setRoute(prevRoute => {
-            const newRoute: Coordinate[] = [...prevRoute, { lat: e.lngLat.lat, lng: e.lngLat.lng }];
-            console.log('MapComponent: New route:', newRoute);
-            return newRoute;
-          });
         });
 
         map.current.on('error', (e) => {
