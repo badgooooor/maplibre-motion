@@ -1,5 +1,5 @@
 import maplibregl, { GeoJSONSource } from 'maplibre-gl';
-import { Coordinate, FeatureCollectionGeoJSON, GeoJSONCoordinate } from './types';
+import { FeatureCollectionGeoJSON, GeoJSONCoordinate, MotionRouteLayer, MotionRouteLayerOptions } from './types';
 
 const createEmptyGeoJSONLineString = (): FeatureCollectionGeoJSON => {
   return {
@@ -17,8 +17,14 @@ const createEmptyGeoJSONLineString = (): FeatureCollectionGeoJSON => {
   }
 }
 
-export const addMotionRoute = (map: maplibregl.Map, id: string, route: Coordinate[]) => {
-  let geoJSON = createEmptyGeoJSONLineString()
+export const addMotionRoute = ({
+  id,
+  map,
+  route,
+  layer,
+  beforeId
+}: MotionRouteLayerOptions) => {
+  const geoJSON = createEmptyGeoJSONLineString()
   const routeCoordinates = route.map(coord => [coord.lng, coord.lat])
 
   map.addSource(id, {
@@ -27,18 +33,11 @@ export const addMotionRoute = (map: maplibregl.Map, id: string, route: Coordinat
   })
 
   map.addLayer({
-    'id': 'route',
-    'type': 'line',
-    'source': id,
-    'layout': {
-      'line-join': 'round',
-      'line-cap': 'round'
-    },
-    'paint': {
-      'line-color': '#888',
-      'line-width': 8
-    }
-  })
+    ...layer,
+    type: 'line',
+    id,
+    source: id
+  } as maplibregl.LayerSpecification, beforeId)
 
   let index = 0
   function animate() {

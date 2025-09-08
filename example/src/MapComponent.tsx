@@ -127,11 +127,24 @@ const MapComponent = (): JSX.Element => {
           if (map.current) {
             map.current.resize();
             
-            addMotionRoute(map.current, 'test-route', routeCoordinates);
+            addMotionRoute({
+              map: map.current,
+              id: 'test-route',
+              route: routeCoordinates,
+              layer: {
+                layout: {
+                  'line-join': 'round',
+                  'line-cap': 'round'
+                },
+                paint: {
+                  'line-color': '#888',
+                  'line-width': 8
+                }
+              }
+            });
           }
         });
 
-        // 
         map.current.on('click', (e: maplibregl.MapMouseEvent) => {
           console.log('MapComponent: Click on coordinates:', e.lngLat.lat, e.lngLat.lng);
         });
