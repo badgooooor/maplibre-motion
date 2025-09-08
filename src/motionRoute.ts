@@ -1,38 +1,7 @@
 import maplibregl, { GeoJSONSource } from 'maplibre-gl';
+import { Coordinate, FeatureCollectionGeoJSON, GeoJSONCoordinate } from './types';
 
-type Coordinate = {
-  lat: number;
-  lng: number;
-}
-
-type GeoJSONCoordinate = [number, number]
-
-type RouteGeoJSON = {
-  type: 'Feature';
-  properties: {};
-  geometry: {
-    type: 'LineString';
-    coordinates: GeoJSONCoordinate[];
-  };
-}
-
-type FeatureCollectionGeoJSON = {
-  type: 'FeatureCollection';
-  features: RouteGeoJSON[];
-}
-
-export const createGeoJSONLineString = (coordinates: GeoJSONCoordinate[]): RouteGeoJSON => {
-  return {
-    type: 'Feature',
-    properties: {},
-    geometry: {
-      type: 'LineString',
-      coordinates
-    }
-  }
-}
-
-export const createEmptyGeoJSONLineString = (): FeatureCollectionGeoJSON => {
+const createEmptyGeoJSONLineString = (): FeatureCollectionGeoJSON => {
   return {
     type: 'FeatureCollection',
     features: [
