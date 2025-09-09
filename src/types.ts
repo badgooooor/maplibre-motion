@@ -1,3 +1,4 @@
+import { Position } from 'geojson'
 import { LayerSpecification, Map } from 'maplibre-gl'
 
 export type Coordinate = {
@@ -5,14 +6,12 @@ export type Coordinate = {
   lng: number
 }
 
-export type GeoJSONCoordinate = [number, number]
-
 export type RouteGeoJSON = {
   type: 'Feature'
   properties: Record<string, unknown>
   geometry: {
     type: 'LineString'
-    coordinates: GeoJSONCoordinate[]
+    coordinates: Position[]
   }
 }
 

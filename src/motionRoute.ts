@@ -1,5 +1,7 @@
 import maplibregl, { GeoJSONSource } from 'maplibre-gl';
-import { FeatureCollectionGeoJSON, GeoJSONCoordinate, MotionRouteLayer, MotionRouteLayerOptions } from './types';
+import { Position } from 'geojson';
+import { FeatureCollectionGeoJSON, MotionRouteLayerOptions } from './types';
+import { interpolateCoordinates } from './utils';
 
 const createEmptyGeoJSONLineString = (): FeatureCollectionGeoJSON => {
   return {
@@ -25,8 +27,7 @@ export const addMotionRoute = ({
   beforeId
 }: MotionRouteLayerOptions) => {
   const geoJSON = createEmptyGeoJSONLineString()
-  const routeCoordinates = route.map(coord => [coord.lng, coord.lat])
-
+  const interpolatedRouteCoordinates = interpolateCoordinates(route, 0.05)
   map.addSource(id, {
     type: 'geojson',
     data: geoJSON
@@ -41,8 +42,8 @@ export const addMotionRoute = ({
 
   let index = 0
   function animate() {
-    if (index < route.length) {
-      geoJSON.features[0].geometry.coordinates = routeCoordinates.slice(0, index + 1) as GeoJSONCoordinate[]
+    if (index < interpolatedRouteCoordinates.length) {
+      geoJSON.features[0].geometry.coordinates = interpolatedRouteCoordinates.slice(0, index + 1) as Position[]
       (map.getSource(id) as GeoJSONSource)?.setData(geoJSON)
       index++
       requestAnimationFrame(animate)
