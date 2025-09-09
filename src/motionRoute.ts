@@ -1,5 +1,7 @@
 import maplibregl, { GeoJSONSource } from 'maplibre-gl';
-import { FeatureCollectionGeoJSON, GeoJSONCoordinate, MotionRouteLayer, MotionRouteLayerOptions } from './types';
+import { Position } from 'geojson';
+import { FeatureCollectionGeoJSON, MotionRouteOptions } from './types';
+import { interpolateCoordinates } from './utils';
 
 const createEmptyGeoJSONLineString = (): FeatureCollectionGeoJSON => {
   return {
@@ -17,16 +19,27 @@ const createEmptyGeoJSONLineString = (): FeatureCollectionGeoJSON => {
   }
 }
 
+/**
+ * Creates and animates a motion route on a MapLibre GL map.
+ * 
+ * @param options - Configuration options for the motion route
+ * @param options.id - Unique identifier for the route source and layer
+ * @param options.map - MapLibre GL Map instance where the route will be displayed
+ * @param options.route - Array of coordinate points defining the route path
+ * @param options.layer - Layer configuration (excluding id, source, and type)
+ * @param options.beforeId - Optional ID of an existing layer to insert this route before
+ * @param options.distance - Distance in kilometers between interpolated points (default: 0.05)
+ */
 export const addMotionRoute = ({
   id,
   map,
   route,
   layer,
-  beforeId
-}: MotionRouteLayerOptions) => {
+  beforeId,
+  distance = 0.05
+}: MotionRouteOptions) => {
   const geoJSON = createEmptyGeoJSONLineString()
-  const routeCoordinates = route.map(coord => [coord.lng, coord.lat])
-
+  const interpolatedRouteCoordinates = interpolateCoordinates(route, distance)
   map.addSource(id, {
     type: 'geojson',
     data: geoJSON
@@ -41,8 +54,8 @@ export const addMotionRoute = ({
 
   let index = 0
   function animate() {
-    if (index < route.length) {
-      geoJSON.features[0].geometry.coordinates = routeCoordinates.slice(0, index + 1) as GeoJSONCoordinate[]
+    if (index < interpolatedRouteCoordinates.length) {
+      geoJSON.features[0].geometry.coordinates = interpolatedRouteCoordinates.slice(0, index + 1) as Position[]
       (map.getSource(id) as GeoJSONSource)?.setData(geoJSON)
       index++
       requestAnimationFrame(animate)
