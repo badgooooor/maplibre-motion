@@ -1,7 +1,7 @@
 {
   "name": "maplibre-motion",
   "version": "0.0.1",
-  "description": "",
+  "description": "Maplibre plugin for animated routes",
   "type": "module",
   "main": "dist/index.js",
   "scripts": {
@@ -16,8 +16,8 @@
     "test:ui": "vitest --ui"
   },
   "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "author": "Yuttakhan Baingern (https://yuttakhanb.dev)",
+  "license": "MIT",
   "packageManager": "pnpm@10.11.0",
   "devDependencies": {
     "@eslint/js": "^9.35.0",
