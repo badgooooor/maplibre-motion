@@ -2,41 +2,22 @@
   "name": "maplibre-motion",
   "version": "0.0.1",
   "description": "Maplibre plugin for animated routes",
-  "type": "module",
-  "main": "dist/index.js",
+  "private": true,
+  "packageManager": "pnpm@10.11.0",
   "scripts": {
-    "build": "tsc",
-    "start": "node dist/index.js",
-    "dev": "tsx src/index.ts",
-    "lint": "eslint .",
-    "lint:fix": "eslint . --fix",
-    "test": "vitest",
-    "test:run": "vitest run",
-    "test:coverage": "vitest run --coverage",
-    "test:ui": "vitest --ui"
+    "build": "pnpm -r build",
+    "dev": "pnpm -r dev",
+    "lint": "pnpm -r lint",
+    "lint:fix": "pnpm -r lint:fix",
+    "test": "pnpm -r test",
+    "test:run": "pnpm -r test:run",
+    "test:coverage": "pnpm -r test:coverage",
+    "test:ui": "pnpm -r test:ui",
+    "clean": "pnpm -r clean && rm -rf node_modules",
+    "type-check": "pnpm -r type-check"
   },
   "keywords": [],
   "author": "Yuttakhan Baingern (https://yuttakhanb.dev)",
   "license": "MIT",
-  "packageManager": "pnpm@10.11.0",
-  "devDependencies": {
-    "@eslint/js": "^9.35.0",
-    "@types/geojson": "^7946.0.16",
-    "@types/maplibre-gl": "^1.14.0",
-    "@types/node": "^20.0.0",
-    "@typescript-eslint/eslint-plugin": "^8.42.0",
-    "@typescript-eslint/parser": "^8.42.0",
-    "eslint": "^9.35.0",
-    "globals": "^16.3.0",
-    "tsx": "^4.0.0",
-    "typescript": "^5.0.0",
-    "vitest": "^3.2.4"
-  },
-  "dependencies": {
-    "@turf/along": "^7.2.0",
-    "@turf/distance": "^7.2.0",
-    "@turf/helpers": "^7.2.0",
-    "@turf/length": "^7.2.0",
-    "maplibre-gl": "^5.7.1"
-  }
+  "devDependencies": {}
 }
