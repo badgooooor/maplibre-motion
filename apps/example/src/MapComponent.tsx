@@ -1,7 +1,6 @@
 import { useEffect, useRef } from 'react';
 import maplibregl from 'maplibre-gl';
-import { addMotionRoute } from '../../src/motionRoute';
-import 'maplibre-gl/dist/maplibre-gl.css';
+import { addMotionRoute } from '@maplibre-motion/core';
 
 interface Coordinate {
   lat: number;
