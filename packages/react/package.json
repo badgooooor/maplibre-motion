@@ -1,0 +1,51 @@
+{
+  "name": "@maplibre-motion/react",
+  "version": "0.0.1",
+  "description": "React wrapper for Maplibre animated routes",
+  "type": "module",
+  "main": "dist/index.js",
+  "module": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "clean": "rm -rf dist",
+    "type-check": "tsc --noEmit"
+  },
+  "keywords": [
+    "maplibre",
+    "map",
+    "animation",
+    "route",
+    "geojson",
+    "react"
+  ],
+  "author": "Yuttakhan Baingern (https://yuttakhanb.dev)",
+  "license": "MIT",
+  "packageManager": "pnpm@10.11.0",
+  "dependencies": {
+    "@maplibre-motion/core": "workspace:*",
+    "react-map-gl": "^7.1.9"
+  },
+  "devDependencies": {
+    "@types/react": "^19.1.10",
+    "@types/react-dom": "^19.1.7",
+    "react": "^19.1.1",
+    "react-dom": "^19.1.1",
+    "typescript": "^5.0.0"
+  },
+  "peerDependencies": {
+    "maplibre-gl": "^5.0.0",
+    "react": "^18.0.0 || ^19.0.0",
+    "react-dom": "^18.0.0 || ^19.0.0"
+  }
+}
