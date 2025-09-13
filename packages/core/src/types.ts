@@ -57,4 +57,6 @@ export type MotionRouteOptions = {
   beforeId?: string
   /** Distance in kilometers between interpolated points for smoother animation with unit of kilometers (default: 0.05) */
   distance?: number
+  /** Delay in milliseconds before starting the animation (default: 0) */
+  delay?: number
 }

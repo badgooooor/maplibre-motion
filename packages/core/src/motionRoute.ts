@@ -29,6 +29,7 @@ const createEmptyGeoJSONLineString = (): FeatureCollectionGeoJSON => {
  * @param options.layer - Layer configuration (excluding id, source, and type)
  * @param options.beforeId - Optional ID of an existing layer to insert this route before
  * @param options.distance - Distance in kilometers between interpolated points (default: 0.05)
+ * @param options.delay - Delay in milliseconds before starting the animation (default: 100)
  */
 export const addMotionRoute = ({
   id,
@@ -36,7 +37,8 @@ export const addMotionRoute = ({
   route,
   layer,
   beforeId,
-  distance = 0.05
+  distance = 0.05,
+  delay = 100
 }: MotionRouteOptions) => {
   const geoJSON = createEmptyGeoJSONLineString()
   const interpolatedRouteCoordinates = interpolateCoordinates(route, distance)
@@ -62,5 +64,5 @@ export const addMotionRoute = ({
     }
   }
 
-  animate()
+  setTimeout(animate, delay)
 }
