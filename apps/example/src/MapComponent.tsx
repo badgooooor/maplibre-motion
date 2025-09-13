@@ -1,6 +1,6 @@
-import { useEffect, useRef } from 'react';
-import maplibregl from 'maplibre-gl';
-import { addMotionRoute } from '@maplibre-motion/core';
+import React, { useRef } from 'react';
+import Map, { MapRef } from 'react-map-gl/maplibre';
+import { MotionRoute } from '@maplibre-motion/react';
 
 interface Coordinate {
   lat: number;
@@ -81,111 +81,69 @@ const routeCoordinates: Coordinate[] = [
   }
 ];
 
-const MapComponent = (): JSX.Element => {
-  const mapContainer = useRef<HTMLDivElement>(null);
-  const map = useRef<maplibregl.Map | null>(null);
+const MapComponent = (): React.JSX.Element => {
+  const mapRef = useRef<MapRef>(null);
 
-  useEffect(() => {
-    if (map.current) return;
-
-
-    const initMap = () => {
-      if (!mapContainer.current) {
-        return;
+  const mapStyle = {
+    version: 8 as const,
+    sources: {
+      'osm': {
+        type: 'raster' as const,
+        tiles: [
+          'https://tile.openstreetmap.org/{z}/{x}/{y}.png'
+        ],
+        tileSize: 256,
+        attribution: '© OpenStreetMap contributors'
       }
-
-      try {        
-        map.current = new maplibregl.Map({
-          container: mapContainer.current,
-          style: {
-            version: 8,
-            sources: {
-              'osm': {
-                type: 'raster',
-                tiles: [
-                  'https://tile.openstreetmap.org/{z}/{x}/{y}.png'
-                ],
-                tileSize: 256,
-                attribution: '© OpenStreetMap contributors'
-              }
-            },
-            layers: [
-              {
-                id: 'osm',
-                type: 'raster',
-                source: 'osm'
-              }
-            ]
-          },
-          center,
-          zoom
-        });
-
-        // Add event listeners
-        map.current.on('load', () => {
-          if (map.current) {
-            map.current.resize();
-            
-            addMotionRoute({
-              map: map.current,
-              id: 'test-route',
-              route: routeCoordinates,
-              layer: {
-                layout: {
-                  'line-join': 'round',
-                  'line-cap': 'round'
-                },
-                paint: {
-                  'line-color': '#888',
-                  'line-width': 8
-                }
-              }
-            });
-          }
-        });
-
-        map.current.on('click', (e: maplibregl.MapMouseEvent) => {
-          console.log('MapComponent: Click on coordinates:', e.lngLat.lat, e.lngLat.lng);
-        });
-
-        map.current.on('error', (e) => {
-          console.error('MapComponent: Map error:', e);
-        });
-  
-        map.current.addControl(new maplibregl.NavigationControl(), 'top-right');
-
-      } catch (error) {
-        console.error('MapComponent: Error initializing map:', error);
+    },
+    layers: [
+      {
+        id: 'osm',
+        type: 'raster' as const,
+        source: 'osm'
       }
-    };
+    ]
+  };
 
-    // Use requestAnimationFrame to ensure DOM is ready
-    const timeoutId = setTimeout(() => {
-      requestAnimationFrame(initMap);
-    }, 100);
-
-    return () => {
-      clearTimeout(timeoutId);
-      if (map.current) {
-        console.log('MapComponent: Cleaning up map');
-        map.current.remove();
-        map.current = null;
-      }
-    };
-  }, []);
+  const handleMapLoad = () => {
+    // Map loaded successfully
+  };
 
   return (
-    <div 
-      ref={mapContainer}
+    <Map
+      ref={mapRef}
+      mapStyle={mapStyle}
+      initialViewState={{
+        longitude: center[0],
+        latitude: center[1],
+        zoom: zoom
+      }}
       style={{ 
         width: '100%', 
         height: '100vh',
         position: 'fixed',
         top: 0,
         left: 0,
-        backgroundColor: '#f0f0f0' // Temporary background to see if container is visible
-      }} 
-    />
+        backgroundColor: '#f0f0f0'
+      }}
+      attributionControl={false}
+      onLoad={handleMapLoad}
+    >
+      <MotionRoute
+        id="test-route"
+        route={routeCoordinates}
+        layer={{
+          layout: {
+            'line-join': 'round',
+            'line-cap': 'round'
+          },
+          paint: {
+            'line-color': '#888',
+            'line-width': 8
+          }
+        }}
+      />
+    </Map>
   );
 };
 
