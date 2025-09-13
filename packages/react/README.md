@@ -5,7 +5,7 @@ React wrapper for MapLibre Motion - animated route visualization on MapLibre GL 
 ## Installation
 
 ```bash
-npm install @maplibre-motion/react @maplibre-motion/core
+npm install @maplibre-motion/react react-map-gl/maplibre
 ```
 
 ## Usage
