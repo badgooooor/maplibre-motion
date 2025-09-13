@@ -14,23 +14,25 @@ npm install @maplibre-motion/react react-map-gl/maplibre
 import { Map } from 'react-map-gl/maplibre'
 import { MotionRoute } from '@maplibre-motion/react'
 
-const route = [
-  { lat: 40.7128, lng: -74.0060 },
-  { lat: 40.7589, lng: -73.9851 }
-]
+const Component = () => {
+    const route = [
+        { lat: 40.7128, lng: -74.0060 },
+        { lat: 40.7589, lng: -73.9851 }
+    ]
 
-<Map>
-  <MotionRoute
-    id="my-route"
-    route={route}
-    layer={{
-      paint: {
-        'line-color': '#ff0000',
-        'line-width': 4
-      }
-    }}
-  />
-</Map>
+    return <Map>
+        <MotionRoute
+            id="my-route"
+            route={route}
+            layer={{
+                paint: {
+                    'line-color': '#ff0000',
+                    'line-width': 4
+                }
+            }}
+        />
+    </Map>
+}
 ```
 
 ## Props
