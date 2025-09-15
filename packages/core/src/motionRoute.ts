@@ -1,23 +1,7 @@
 import maplibregl, { GeoJSONSource } from 'maplibre-gl';
 import { Position } from 'geojson';
-import { FeatureCollectionGeoJSON, MotionRouteOptions } from './types';
-import { interpolateCoordinates } from './utils';
-
-const createEmptyGeoJSONLineString = (): FeatureCollectionGeoJSON => {
-  return {
-    type: 'FeatureCollection',
-    features: [
-      {
-        type: 'Feature',
-        properties: {},
-        geometry: {
-          type: 'LineString',
-          coordinates: []
-        }
-      }
-    ]
-  }
-}
+import { MotionRouteOptions } from './types';
+import { createEmptyGeoJSONLineString, interpolateCoordinates } from './utils';
 
 /**
  * Creates and animates a motion route on a MapLibre GL map.
