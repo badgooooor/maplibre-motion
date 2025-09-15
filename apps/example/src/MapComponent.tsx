@@ -1,14 +1,20 @@
 import React, { useRef } from 'react';
-import Map, { MapRef } from 'react-map-gl/maplibre';
-import { MotionRoute } from '@maplibre-motion/react';
+import Map, { MapRef, MapLayerMouseEvent } from 'react-map-gl/maplibre';
+import { MotionRoute, MotionArc } from '@maplibre-motion/react';
 
 interface Coordinate {
   lat: number;
   lng: number;
 }
 
-const center: [number, number] = [100.5516076004593, 13.728959280625702]; // [longitude, latitude]
-const zoom = 15;
+// Start point: Bangkok Airport (BKK) - already correct
+// End point: Western coast of Japan's Honshu island (not Tokyo Haneda)
+const startPoint: Coordinate = { lat: 13.681749553296001, lng: 100.74822444888923 }; // BKK Airport
+const endPoint: Coordinate = { lat: 35.54844717789857, lng: 139.78513343125474 }; // Western coast of Honshu, Japan
+
+// Center map between BKK and Japan's western coast
+const center: [number, number] = [116.5, 24.5]; // [longitude, latitude] - between BKK and Japan's western coast
+const zoom = 4; // Wider view to show both points
 
 const routeCoordinates: Coordinate[] = [
   {
@@ -109,6 +115,17 @@ const MapComponent = (): React.JSX.Element => {
     // Map loaded successfully
   };
 
+  const handleMapClick = (event: MapLayerMouseEvent) => {
+    const { lngLat } = event;
+    console.log('Clicked coordinates:', {
+      lat: lngLat.lat,
+      lng: lngLat.lng
+    });
+    
+    // You can also show an alert or update state with the coordinates
+    console.log(`Clicked at: ${lngLat.lat.toFixed(6)}, ${lngLat.lng.toFixed(6)}`);
+  };
+
   return (
     <Map
       ref={mapRef}
@@ -128,6 +145,7 @@ const MapComponent = (): React.JSX.Element => {
       }}
       attributionControl={false}
       onLoad={handleMapLoad}
+      onClick={handleMapClick}
     >
       <MotionRoute
         id="test-route"
@@ -142,6 +160,24 @@ const MapComponent = (): React.JSX.Element => {
             'line-width': 8
           }
         }}
+      />
+      <MotionArc
+        id="bkk-hnd-arc"
+        startCoordinate={startPoint}
+        endCoordinate={endPoint}
+        layer={{
+          layout: {
+            'line-join': 'round',
+            'line-cap': 'round'
+          },
+          paint: {
+            'line-color': '#ff6b35',
+            'line-width': 4,
+            'line-opacity': 0.8
+          }
+        }}
+        distance={20}
+        arcHeightPercentage={0.4}
       />
     </Map>
   );
