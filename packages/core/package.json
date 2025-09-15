@@ -38,9 +38,13 @@
   "license": "MIT",
   "dependencies": {
     "@turf/along": "^7.2.0",
+    "@turf/bearing": "^7.2.0",
+    "@turf/destination": "^7.2.0",
     "@turf/distance": "^7.2.0",
     "@turf/helpers": "^7.2.0",
     "@turf/length": "^7.2.0",
+    "@turf/line-arc": "^7.2.0",
+    "@turf/line-distance": "^4.7.3",
     "maplibre-gl": "^5.7.1"
   },
   "devDependencies": {
