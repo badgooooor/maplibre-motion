@@ -1,2 +1,2 @@
-export * from './ArcMotionRoute'
+export * from './MotionArc'
 export * from './MotionRoute'
